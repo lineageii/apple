@@ -153,6 +153,7 @@ public class User {
 	public void openApple(int i) throws MalformedURLException, IOException,
 			SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
+		HttpUnitOptions.setScriptingEnabled(false);
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 		//HttpUnitOptions.setLoggingHttpHeaders(true);
 		HttpUnitOptions.setAcceptCookies(true);

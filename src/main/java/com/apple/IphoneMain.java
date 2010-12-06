@@ -55,8 +55,8 @@ public class IphoneMain {
 							// 3 iphone4 32
 							user.buy(1);
 						} catch (Exception e) {
-							Logs.getLogger().error(e);
-							Logs.getLogger().error("出错用户信息：" + user.toString());
+							Logs.getLogger().error(e,e);
+							Logs.getLogger().error("出错用户信息：" + user.getAppleId());
 						} finally {
 							doneSignal.countDown();
 						}
