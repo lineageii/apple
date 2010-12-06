@@ -125,6 +125,19 @@ public class User {
 		this.postalCode = postalCode;
 	}
 
+	public void buy(int i) throws Exception{
+		openApple(i);
+		Logs.getLogger().info("addToCart");
+		addToCart();
+		Logs.getLogger().info("checkoutx");
+		checkoutx();
+		Logs.getLogger().info("invoice");
+		invoice();
+		Logs.getLogger().info("checkoutxForShip");
+		checkoutxForShip();
+		Logs.getLogger().info("status");
+		status();
+	}
 	public void openssl() throws MalformedURLException, IOException, SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
@@ -134,9 +147,10 @@ public class User {
 		WebResponse response = wc.getResponse(request);
 		System.out.println(response.getText());
 		
+		
 	}
 	
-	public void openApple() throws MalformedURLException, IOException,
+	public void openApple(int i) throws MalformedURLException, IOException,
 			SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
@@ -148,12 +162,14 @@ public class User {
 				IphoneUrl.IPHONE_SELECT);
 		WebResponse mainRs = wc.getResponse(mainRq);
 
-		WebForm webForm = mainRs.getForms()[1];
+		WebForm webForm = mainRs.getForms()[i];
 		webForm.getSubmitButtons()[0].click();
-
+		
 	}
 
 	public void addToCart() throws Exception {
+		
+		
 		GetMethodWebRequest request = new GetMethodWebRequest(
 				"http://store.apple.com/cn/configure/MC637CH/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
 		WebResponse response = wc.getResponse(request);
