@@ -1,0 +1,372 @@
+package com.apple;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.xml.sax.SAXException;
+
+import com.meterware.httpunit.ClientProperties;
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpUnitOptions;
+import com.meterware.httpunit.PostMethodWebRequest;
+import com.meterware.httpunit.WebConversation;
+import com.meterware.httpunit.WebForm;
+import com.meterware.httpunit.WebResponse;
+
+public class User {
+	private final WebConversation wc;
+	private String appleId = "hujiag8@eyou.com";
+	private String password = "pengyan";
+	private String phoneNumber = "13482379270";
+	private String email = "hujiag8@eyou.com";
+	/** 名 */
+	private String firstName = "佳佳";
+	/** 姓 */
+	private String lastName = "胡";
+	private String state = "上海";
+	private String city = "上海";
+	private String district = "徐汇区";
+	private String street = "苍梧路468弄6号602室";
+	private String postalCode = "200000";
+	
+	public User(){
+		System.setProperty("javax.net.ssl.trustStore","C:\\jdk1.5.0_11\\jre\\lib\\security\\cacerts");
+		wc = new WebConversation();
+	}
+	
+	public String getAppleId() {
+		return appleId;
+	}
+
+	public void setAppleId(String appleId) {
+		this.appleId = appleId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public void openssl() throws MalformedURLException, IOException, SAXException {
+		HttpUnitOptions.setDefaultCharacterSet("utf-8");
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
+		HttpUnitOptions.setLoggingHttpHeaders(true);
+		GetMethodWebRequest request = new GetMethodWebRequest(
+		"https://store.apple.com/cn/sign_in?c=84a764d391b0d8d4242ec110ce75ad2b&r=SXYD4UDAPXU7P7KXF&s=7afeac546945c49535178c53ee5575d0&t=SXYD4UDAPXU7P7KXF");
+		WebResponse response = wc.getResponse(request);
+		System.out.println(response.getText());
+		
+	}
+	
+	public void openApple() throws MalformedURLException, IOException,
+			SAXException {
+		HttpUnitOptions.setDefaultCharacterSet("utf-8");
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
+		//HttpUnitOptions.setLoggingHttpHeaders(true);
+		HttpUnitOptions.setAcceptCookies(true);
+		wc.setUserAgent("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.12 (KHTML, like Gecko) Chrome/9.0.587.0 Safari/534.12");
+		ClientProperties.getDefaultProperties().setAcceptCookies(true);
+		PostMethodWebRequest mainRq = new PostMethodWebRequest(
+				IphoneUrl.IPHONE_SELECT);
+		WebResponse mainRs = wc.getResponse(mainRq);
+
+		WebForm webForm = mainRs.getForms()[1];
+		webForm.getSubmitButtons()[0].click();
+
+	}
+
+	public void addToCart() throws Exception {
+		GetMethodWebRequest request = new GetMethodWebRequest(
+				"http://store.apple.com/cn/configure/MC637CH/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
+		WebResponse response = wc.getResponse(request);
+		System.out.println(response.getText());
+		
+		String result = wc.getResponse("http://store.apple.com/cn/cart").getText();
+		System.out.println(result);
+		String url =  parseUrlForCart(result);
+		System.out.println("url="+url);
+		
+		result = wc.getResponse("http://store.apple.com" +url).getText();
+		System.out.println(result);
+		
+		response = wc.getResponse("http://store.apple.com/cn/checkout/start");
+		
+		String sslUrl = response.getHeaderField("Location");
+		
+		wc.getResponse(sslUrl);
+		
+		PostMethodWebRequest signinRq = new PostMethodWebRequest("https://store.apple.com/cn/sentryx/sign_in");
+		signinRq.setParameter("login-appleId", this.appleId);
+		signinRq.setParameter("login-password", this.password);
+		String[] params = sslUrl.split("&");
+		String c = params[0].split("=")[1];
+		String r = params[1].split("=")[1];
+		String s = params[2].split("=")[1];
+		String t = params[3].split("=")[1];
+		
+		System.out.println("c="+c);
+		System.out.println("r="+r);
+		System.out.println("s="+s);
+		System.out.println("t="+t);
+		
+		signinRq.setParameter("_a", "login.sign");
+		signinRq.setParameter("c", c);
+		signinRq.setParameter("_fid", "si");
+		signinRq.setParameter("r", r);
+		signinRq.setParameter("s", s);
+		signinRq.setParameter("t", t);
+		
+		WebResponse signinRs = wc.getResponse(signinRq);
+		result = signinRs.getText();
+		System.out.println("sigin result=" + result);
+		
+		
+		setCookie(signinRs);
+		
+		url = parseUrl(result, "https.*?\"}");
+		
+		url = StringUtils.remove(url, "\"}");
+		
+		System.out.println("url=" + url);
+		
+		wc.getResponse(url);
+		
+		PostMethodWebRequest startRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/start");
+		startRq.setParameter("pltn", url.split("=")[1]);
+		startRq.setParameter("v", "on");
+		result = wc.getResponse(startRq).getText();
+		
+		System.out.println("result=" + result);
+		
+		PostMethodWebRequest checkoutRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout");
+		System.out.println(url.split("=")[1]);
+		checkoutRq.setParameter("pltn", url.split("=")[1]);
+		checkoutRq.setParameter("v", "on");
+		result = wc.getResponse(checkoutRq).getText();
+		System.out.println("result=" + result);
+		
+//		
+
+	}
+	
+	public void checkoutx() throws MalformedURLException, IOException, SAXException{
+		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
+		checkoutxRq.setParameter("shipping-user-lastName", this.lastName);
+		checkoutxRq.setParameter("shipping-user-firstName", this.firstName);
+		checkoutxRq.setParameter("shipping-user-daytimePhoneAreaCode", "086");
+		checkoutxRq.setParameter("shipping-user-daytimePhone", this.phoneNumber);
+		checkoutxRq.setParameter("shipping-user-emailAddress", this.email);
+		checkoutxRq.setParameter("shipping-user-state", this.state);
+		checkoutxRq.setParameter("shipping-user-city", this.city);
+		checkoutxRq.setParameter("shipping-user-district", this.district);
+		checkoutxRq.setParameter("shipping-user-street", this.street);
+		checkoutxRq.setParameter("shipping-user-street2", "");
+		checkoutxRq.setParameter("shipping-user-postalCode", this.postalCode);
+		checkoutxRq.setParameter("shipping-save-as-default", "true");
+		checkoutxRq.setParameter("zip", "");
+		checkoutxRq.setParameter("method", "A8");
+		checkoutxRq.setParameter("promo-code", "");
+		checkoutxRq.setParameter("_a", "ship.cont");
+		checkoutxRq.setParameter("_fid", "co");
+		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
+		String result = checkoutxRs.getText();
+		System.out.println("result=" + result);
+		setCookie(checkoutxRs);
+		
+		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
+		checkoutxRq.setParameter("bankOption", "Alipay");
+		checkoutxRq.setParameter("zip", "");
+		checkoutxRq.setParameter("method", "A8");
+		checkoutxRq.setParameter("promo-code", "");
+		checkoutxRq.setParameter("_a", "bill.cont");
+		checkoutxRq.setParameter("_fid", "co");
+		 checkoutxRs = wc.getResponse(checkoutxRq);
+		result = checkoutxRs.getText();
+		System.out.println("result=" + result);
+		setCookie(checkoutxRs);
+	}
+	
+	public void invoice() throws MalformedURLException, IOException, SAXException{
+		PostMethodWebRequest invoiceRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx/invoice");
+		invoiceRq.setParameter("zip", "");
+		invoiceRq.setParameter("method", "A8");
+		invoiceRq.setParameter("promo-code", "");
+		invoiceRq.setParameter("_a", "copy-shipping");
+		invoiceRq.setParameter("_fid", "co");
+		WebResponse invoiceRs = wc.getResponse(invoiceRq);
+		String result = invoiceRs.getText();
+		System.out.println("result=" + result);
+		setCookie(invoiceRs);
+	}
+	
+	public void checkoutxForShip() throws MalformedURLException, IOException, SAXException{
+		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
+		checkoutxRq.setParameter("invoice-user-address-lastName", this.lastName);
+		checkoutxRq.setParameter("invoice-user-address-firstName", this.firstName);
+		checkoutxRq.setParameter("invoice-user-address-daytimePhoneAreaCode", "086");
+		checkoutxRq.setParameter("invoice-user-address-daytimePhone", this.phoneNumber);
+		checkoutxRq.setParameter("invoice-user-address-emailAddress", this.email);
+		checkoutxRq.setParameter("invoice-user-address-state", this.state);
+		checkoutxRq.setParameter("invoice-user-address-city", this.city);
+		checkoutxRq.setParameter("invoice-user-address-district", this.district);
+		checkoutxRq.setParameter("invoice-user-address-street", this.street);
+		checkoutxRq.setParameter("invoice-user-address-street2", "");
+		checkoutxRq.setParameter("invoice-user-address-postalCode", this.postalCode);
+		checkoutxRq.setParameter("invoice-user-address-countryCode", "CN");
+		checkoutxRq.setParameter("_a", "invoice.cont");
+		checkoutxRq.setParameter("_fid", "co");
+		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
+		String result = checkoutxRs.getText();
+		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		setCookie(checkoutxRs);
+		
+		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
+		checkoutxRq.setParameter("accept", "true");
+		checkoutxRq.setParameter("_a", "terms.cont");
+		checkoutxRq.setParameter("_fid", "co");
+		 checkoutxRs = wc.getResponse(checkoutxRq);
+		result = checkoutxRs.getText();
+		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		setCookie(checkoutxRs);
+		
+		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
+		checkoutxRq.setParameter("deviceID", "TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;zh-CN;GBK;store.apple.com;undefined;undefined;undefined;undefined;false;false;1291663443460;8;Tue%20Jun%2007%202005%2021%3A33%3A44%20GMT+0800%20%28China%20Standard%20Time%29;1280;800;6.00;10.1;;1.6.0_18;11.0;;;-480;-480;Tue%20Dec%2007%202010%2003%3A24%3A03%20GMT+0800%20%28China%20Standard%20Time%29;32;1280;770;0;0;Adobe%20Acrobat%7CAdobe%20Acrobat%20Plug-In%20Version%206.00%20for%20Netscape;;;;Shockwave%20for%20Director%7CAdobe%20Shockwave%20for%20Director%20Netscape%20plug-in%2C%20version%2011.0;Shockwave%20Flash%7CShockwave%20Flash%2010.1%20r103;;;;;;;;;Silverlight%20Plug-In%7C3.0.50106.0;Windows%20Media%20Player%20Plug-in%20Dynamic%20Link%20Library%7CNpdsplay%20dll;;;20;");
+		checkoutxRq.setParameter("zip", "");
+		checkoutxRq.setParameter("method", "A8");
+		checkoutxRq.setParameter("promo-code", "");
+		checkoutxRq.setParameter("_a", "po");
+		checkoutxRq.setParameter("_fid", "co");
+		checkoutxRs = wc.getResponse(checkoutxRq);
+		result = checkoutxRs.getText();
+		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		setCookie(checkoutxRs);
+	}
+
+	
+	public void status() throws MalformedURLException, IOException, SAXException, InterruptedException{
+		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/status");
+		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
+		String result = checkoutxRs.getText();
+		System.out.println("https://store.apple.com/cn/checkout/status result=" + result);
+		setCookie(checkoutxRs);
+		
+		Thread.sleep(2000);
+		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx/status");
+		checkoutxRq.setParameter("_a", "st");
+		checkoutxRq.setParameter("_fid", "co");
+		checkoutxRs = wc.getResponse(checkoutxRq);
+		result = checkoutxRs.getText();
+		System.out.println("https://store.apple.com/cn/checkoutx/status result=" + result);
+		setCookie(checkoutxRs);
+		
+		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/thankyou");
+		result = wc.getResponse(checkoutxRq).getText();
+		System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
+	}
+
+	
+	private String parseUrlForCart(String response) throws Exception {
+		Pattern pattern = Pattern.compile("/cn/hybrid_cartx.*?=cart");
+		Matcher matcher = pattern.matcher(response);
+		if (matcher.find())
+			return matcher.group();
+		else
+			throw new Exception("Can't find verify");
+	}
+	
+	private String parseUrl(String response, String regex) throws Exception {
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(response);
+		if (matcher.find())
+			return matcher.group();
+		else
+			throw new Exception("Can't find verify");
+	}
+	
+	private void setCookie(WebResponse rs){
+		String[] cookies =rs.getHeaderFields("set-cookie");
+		for(String cookie : cookies){
+			String firstCookie = cookie.split(";")[0];
+			String[] cookieStr = firstCookie.split("=");
+			wc.putCookie(cookieStr[0], cookieStr[1]);
+		}
+	}
+}
