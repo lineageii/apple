@@ -23,20 +23,21 @@ public class IphoneMain {
 	public static void main(String[] args) throws Exception {
 		Logs.getLogger().info("开始");
 
-		// 取得密码正确的注册用户
-		List<User> users = new ArrayList<User>();
 
-		try {
-			Logs.getLogger().info("开始取得用户列表");
-			users = getUsers();
-
-		} catch (Exception e) {
-			Logs.getLogger().error("取得用户列表错误", e);
-			return;
-		}
 
 		// LOOP START
 		while (true) {
+			// 取得密码正确的注册用户
+			List<User> users = new ArrayList<User>();
+
+			try {
+				Logs.getLogger().info("开始取得用户列表");
+				users = getUsers();
+
+			} catch (Exception e) {
+				Logs.getLogger().error("取得用户列表错误", e);
+				return;
+			}
 			// 开始时间
 			long startTime = System.currentTimeMillis();
 
