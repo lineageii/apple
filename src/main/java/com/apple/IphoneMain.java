@@ -103,13 +103,24 @@ public class IphoneMain {
 
 	private static List<User> getUsers() {
 		List<User> startUsers = new ArrayList<User>();
-		for(int i = 1 ; i<=2 ; i++){
+		for(int i = 1 ; i<=9 ; i++){
 			User user = new User();
 			user.setAppleId("hujiag"+ i +"@eyou.com");
 			user.setPassword("pengyan");
 			user.setEmail("hujiag"+ i +"@eyou.com");
+			user.setPhoneNumber("134823792" + i);
+			user.setStreet("苍梧路468弄6号60" + i);
 			startUsers.add(user);
 		}
+//		for(int i = 1 ; i<=50 ; i++){
+//			User user = new User();
+//			user.setAppleId("hujjg"+ i +"@eyou.com");
+//			user.setPassword("pengyan");
+//			user.setEmail("hujjg"+ i +"@eyou.com");
+//			user.setPhoneNumber("134823792" + i);
+//			user.setStreet("苍梧路468弄6号60" + i);
+//			startUsers.add(user);
+//		}
 		return startUsers;
 	}
 }

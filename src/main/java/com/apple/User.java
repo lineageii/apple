@@ -33,7 +33,7 @@ public class User {
 	private String postalCode = "200000";
 	
 	public User(){
-		System.setProperty("javax.net.ssl.trustStore","C:\\jdk1.5.0_11\\jre\\lib\\security\\cacerts");
+		System.setProperty("javax.net.ssl.trustStore","C:\\Java\\jdk1.6.0_21\\jre\\lib\\security\\cacerts");
 		wc = new WebConversation();
 	}
 	
