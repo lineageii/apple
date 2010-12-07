@@ -177,17 +177,17 @@ public class User {
 		System.out.println(response.getText());
 		
 		String result = wc.getResponse("http://store.apple.com/cn/cart").getText();
-		System.out.println(result);
+		//System.out.println(result);
 		String url =  parseUrlForCart(result);
-		System.out.println("url="+url);
+		//System.out.println("url="+url);
 		
 		result = wc.getResponse("http://store.apple.com" +url).getText();
-		System.out.println(result);
+		//System.out.println(result);
 		
 		response = wc.getResponse("http://store.apple.com/cn/checkout/start");
 		
 		String sslUrl = response.getHeaderField("Location");
-		
+		System.out.println(sslUrl);
 		wc.getResponse(sslUrl);
 		
 		PostMethodWebRequest signinRq = new PostMethodWebRequest("https://store.apple.com/cn/sentryx/sign_in");
@@ -213,7 +213,7 @@ public class User {
 		
 		WebResponse signinRs = wc.getResponse(signinRq);
 		result = signinRs.getText();
-		System.out.println("sigin result=" + result);
+		//System.out.println("sigin result=" + result);
 		
 		
 		setCookie(signinRs);
@@ -222,7 +222,7 @@ public class User {
 		
 		url = StringUtils.remove(url, "\"}");
 		
-		System.out.println("url=" + url);
+		//System.out.println("url=" + url);
 		
 		wc.getResponse(url);
 		
@@ -231,14 +231,14 @@ public class User {
 		startRq.setParameter("v", "on");
 		result = wc.getResponse(startRq).getText();
 		
-		System.out.println("result=" + result);
+		//System.out.println("result=" + result);
 		
 		PostMethodWebRequest checkoutRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout");
 		System.out.println(url.split("=")[1]);
 		checkoutRq.setParameter("pltn", url.split("=")[1]);
 		checkoutRq.setParameter("v", "on");
 		result = wc.getResponse(checkoutRq).getText();
-		System.out.println("result=" + result);
+		//System.out.println("result=" + result);
 		
 //		
 
@@ -265,7 +265,7 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
-		System.out.println("result=" + result);
+		//System.out.println("result=" + result);
 		setCookie(checkoutxRs);
 		
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
@@ -277,7 +277,7 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		 checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
-		System.out.println("result=" + result);
+		//System.out.println("result=" + result);
 		setCookie(checkoutxRs);
 	}
 	
@@ -290,7 +290,7 @@ public class User {
 		invoiceRq.setParameter("_fid", "co");
 		WebResponse invoiceRs = wc.getResponse(invoiceRq);
 		String result = invoiceRs.getText();
-		System.out.println("result=" + result);
+		//System.out.println("result=" + result);
 		setCookie(invoiceRs);
 	}
 	
@@ -312,7 +312,7 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
-		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
 		setCookie(checkoutxRs);
 		
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
@@ -321,7 +321,7 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		 checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
-		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
 		setCookie(checkoutxRs);
 		
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
@@ -333,7 +333,7 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
-		System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
 		setCookie(checkoutxRs);
 	}
 
@@ -342,7 +342,7 @@ public class User {
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/status");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
-		System.out.println("https://store.apple.com/cn/checkout/status result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkout/status result=" + result);
 		setCookie(checkoutxRs);
 		
 		Thread.sleep(2000);
@@ -351,12 +351,12 @@ public class User {
 		checkoutxRq.setParameter("_fid", "co");
 		checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
-		System.out.println("https://store.apple.com/cn/checkoutx/status result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkoutx/status result=" + result);
 		setCookie(checkoutxRs);
 		
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/thankyou");
 		result = wc.getResponse(checkoutxRq).getText();
-		System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
+		//System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
 	}
 
 	
