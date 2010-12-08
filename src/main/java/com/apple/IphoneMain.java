@@ -10,6 +10,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.apple.common.RandomName;
+
 public class IphoneMain {
 
 	// 从配置文件中取出最大线程，初始化线程池
@@ -109,7 +111,10 @@ public class IphoneMain {
 			user.setPassword("pengyan");
 			user.setEmail("hujiag"+ i +"@eyou.com");
 			user.setPhoneNumber("134823792" + i);
-			user.setStreet("苍梧路468弄6号60" + i);
+			user.setStreet("宜山路1398号特力集团" + i);
+			String name = RandomName.getName();
+			user.setLastName(name.substring(0, 1));
+			user.setFirstName(name.substring(1));
 			startUsers.add(user);
 		}
 //		for(int i = 1 ; i<=50 ; i++){
