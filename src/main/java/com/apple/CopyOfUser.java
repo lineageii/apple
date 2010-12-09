@@ -16,7 +16,7 @@ import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
 
-public class User {
+public class CopyOfUser {
 	private final WebConversation wc;
 	private String appleId = "hujiag8@eyou.com";
 	private String password = "pengyan";
@@ -32,8 +32,8 @@ public class User {
 	private String street = "苍梧路468弄6号602室";
 	private String postalCode = "200000";
 	
-	public User(){
-		System.setProperty("javax.net.ssl.trustStore","C:\\jdk1.5.0_11\\jre\\lib\\security\\cacerts");
+	public CopyOfUser(){
+		System.setProperty("javax.net.ssl.trustStore","C:\\Java\\jdk1.6.0_21\\jre\\lib\\security\\cacerts");
 		wc = new WebConversation();
 	}
 	
@@ -126,7 +126,6 @@ public class User {
 	}
 
 	public void buy(int i) throws Exception{
-		Logs.getLogger().info("start");
 		openApple(i);
 		Logs.getLogger().info("addToCart");
 		addToCart();
@@ -138,19 +137,19 @@ public class User {
 		checkoutxForShip();
 		Logs.getLogger().info("status");
 		status();
-		Logs.getLogger().info("end");
+	}
+	public void openssl() throws MalformedURLException, IOException, SAXException {
+		HttpUnitOptions.setDefaultCharacterSet("utf-8");
+		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
+		HttpUnitOptions.setLoggingHttpHeaders(true);
+		GetMethodWebRequest request = new GetMethodWebRequest(
+		"https://store.apple.com/cn/sign_in?c=84a764d391b0d8d4242ec110ce75ad2b&r=SXYD4UDAPXU7P7KXF&s=7afeac546945c49535178c53ee5575d0&t=SXYD4UDAPXU7P7KXF");
+		WebResponse response = wc.getResponse(request);
+		System.out.println(response.getText());
+		
+		
 	}
 	
-	/**
-	 * 打开iphone订购页面
-	 * 1 iphone3 8
-     * 2 iphone4 16
-	 * 3 iphone4 32
-	 * @param i
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @throws SAXException
-	 */
 	public void openApple(int i) throws MalformedURLException, IOException,
 			SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
