@@ -24,8 +24,11 @@
 	<!-- 定义JdbcTemplate -->
 	<bean id="jdbcTemplate"
 		class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource">
-			<ref local="h2dataSource" />
-		</property>
+		<property name="dataSource" ref="h2dataSource"/>
+	</bean>
+	
+	<bean id="orderDao" class="com.apple.dao.impl.OrderDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="insertSql" value="INSERT INTO APPLE_ORDER (ORDERNO, APPLEID, STATUS, GOODSNAME, LASTNAME, FIRSTNAME, ADDRESS, PHONENO, ORDERDATE, SHIPDATE, ARRIVALDATE) VALUES (?,?,?,?,?,?,?,?,?,?,?)"></property>
 	</bean>
 </beans>
