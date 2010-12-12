@@ -1,12 +1,12 @@
 package com.apple;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 
-import com.thoughtworks.selenium.*;
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.SeleneseTestCase;
 
 public class Iphone4Test extends SeleneseTestCase {
 	@Before
@@ -20,6 +20,7 @@ public class Iphone4Test extends SeleneseTestCase {
 		//setUp("http://store.apple.com/", "*googlechrome");
 		selenium = new DefaultSelenium("localhost", 4444, "*firefoxproxy c:\\Program Files\\Mozilla Firefox\\firefox.exe", "http://store.apple.com/");
         selenium.start();
+        
 	}
 
 	@After

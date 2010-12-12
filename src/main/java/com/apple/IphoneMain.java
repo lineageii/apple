@@ -10,6 +10,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.apple.common.RandomName;
 
 public class IphoneMain {
@@ -23,9 +26,12 @@ public class IphoneMain {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		
+		ApplicationContext appContext = 
+			new ClassPathXmlApplicationContext("spring.xml");
+		
 		Logs.getLogger().info("开始");
-
-
+		
 
 		// LOOP START
 		while (true) {

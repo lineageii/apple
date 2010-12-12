@@ -4,6 +4,7 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+	
 	<bean id="h2dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource"
 		init-method="createDataSource"
@@ -13,7 +14,17 @@
 		<property name="username" value="sa" />
 		<property name="password" value="sa" />
 	</bean>
-
+ <!-- 
+ 	<bean id="h2dataSource"
+		class="org.h2.jdbcx.JdbcConnectionPool"
+		init-method="create"
+		destroy-method="dispose" >
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url" value="jdbc:h2:~/db/apple" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+	-->
 	<bean id="org.h2.tools.Server" class="org.h2.tools.Server"
 		factory-method="createTcpServer" init-method="start"
 		destroy-method="stop">
@@ -27,8 +38,15 @@
 		<property name="dataSource" ref="h2dataSource"/>
 	</bean>
 	
+	<bean id="simpleJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate"> 
+  		<constructor-arg ref="h2dataSource" /> 
+	</bean> 
 	<bean id="orderDao" class="com.apple.dao.impl.OrderDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 		<property name="insertSql" value="INSERT INTO APPLE_ORDER (ORDERNO, APPLEID, STATUS, GOODSNAME, LASTNAME, FIRSTNAME, ADDRESS, PHONENO, ORDERDATE, SHIPDATE, ARRIVALDATE) VALUES (?,?,?,?,?,?,?,?,?,?,?)"></property>
+	</bean>
+	<bean id="userDao" class="com.apple.dao.impl.UserDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="insertSql" value="INSERT INTO APPLE_USER (APPLEID, PWD) VALUES (?,?)"></property>
 	</bean>
 </beans>
