@@ -9,7 +9,7 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.SeleneseTestCase;
 
 public class Iphone4Test extends SeleneseTestCase {
-	@Before
+	
 	public void setUp() throws Exception {
 		// selenium = new DefaultSelenium("localhost", 4444, "*firefoxproxy c:\\Program Files\\Mozilla Firefox\\firefox.exe", "http://store.apple.com/");
          //selenium.start();
@@ -23,7 +23,7 @@ public class Iphone4Test extends SeleneseTestCase {
         
 	}
 
-	@After
+	
 	public void tearDown() throws Exception {
 		selenium.stop();
 	}
