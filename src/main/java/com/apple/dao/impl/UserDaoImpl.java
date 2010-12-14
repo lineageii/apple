@@ -3,9 +3,12 @@
  */
 package com.apple.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import com.apple.entity.AppleUser;
 
@@ -22,8 +25,13 @@ public class UserDaoImpl implements com.apple.dao.UserDao {
 	 * @see com.apple.dao.UserDao#getList()
 	 */
 	public List<AppleUser> getList() {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.query("select * from APPLE_USER", new ParameterizedRowMapper<AppleUser>(){
+			public AppleUser mapRow(ResultSet rs, int index) throws SQLException {
+            	AppleUser user = new AppleUser();
+            	user.setAppleid(rs.getString("appleid"));
+            	user.setPassword(rs.getString("PWD"));
+                return user;
+			}});
 	}
 
 	/* (non-Javadoc)

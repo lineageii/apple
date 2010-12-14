@@ -21,9 +21,8 @@ public class DbTest {
 	public void setUp() {
 		appContext = new ClassPathXmlApplicationContext("spring.xml");
 		
-		 //SimpleJdbcTestUtils.executeSqlScript((SimpleJdbcTemplate) appContext.getBean("simpleJdbcTemplate"), new ClassPathResource("apple.ddl"), false);
+//		 /SimpleJdbcTestUtils.executeSqlScript((SimpleJdbcTemplate) appContext.getBean("simpleJdbcTemplate"), new ClassPathResource("apple.ddl"), false);
 	}
-	@Test
 	public void TestDb(){
 		log.info("insert start");
 		UserDao userDao = (UserDao)appContext.getBean("userDao");
@@ -48,7 +47,13 @@ public class DbTest {
 		orderDao.insertOrder(order);
 		log.info("insert end");
 	}
-	
+	@Test
+	public void selectAllUser(){
+		UserDao userDao = (UserDao)appContext.getBean("userDao");
+		for(AppleUser user : userDao.getList()) {
+			log.info("appleid:" + user.getAppleid()+ " password:" + user.getPassword());
+		}
+	}
 	@After
 	public void tearDown(){
 	}

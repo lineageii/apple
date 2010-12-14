@@ -10,25 +10,29 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.apple.common.RandomName;
+import com.apple.dao.UserDao;
+import com.apple.entity.AppleUser;
 
 public class IphoneMain {
 
+	private static Log log = LogFactory.getLog(IphoneMain.class);
 	// 从配置文件中取出最大线程，初始化线程池
 	private static ExecutorService exec = Executors
 			.newFixedThreadPool(Config.THREAD_POOL_NUM);
 
+	private static ApplicationContext appContext = 
+		new ClassPathXmlApplicationContext("spring.xml");
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		
-		ApplicationContext appContext = 
-			new ClassPathXmlApplicationContext("spring.xml");
 		
 		Logs.getLogger().info("开始");
 		
@@ -111,27 +115,35 @@ public class IphoneMain {
 
 	private static List<User> getUsers() {
 		List<User> startUsers = new ArrayList<User>();
-		for(int i = 1 ; i<=9 ; i++){
-			User user = new User();
-			user.setAppleId("hujiag"+ i +"@eyou.com");
-			user.setPassword("pengyan");
-			user.setEmail("hujiag"+ i +"@eyou.com");
-			user.setPhoneNumber("134823792" + i);
-			user.setStreet("宜山路1398号特力集团" + i);
-			String name = RandomName.getName();
-			user.setLastName(name.substring(0, 1));
-			user.setFirstName(name.substring(1));
-			startUsers.add(user);
-		}
-//		for(int i = 1 ; i<=50 ; i++){
+//		for(int i = 1 ; i<=9 ; i++){
 //			User user = new User();
-//			user.setAppleId("hujjg"+ i +"@eyou.com");
+//			user.setAppleId("hujiag"+ i +"@eyou.com");
 //			user.setPassword("pengyan");
-//			user.setEmail("hujjg"+ i +"@eyou.com");
+//			user.setEmail("hujiag"+ i +"@eyou.com");
 //			user.setPhoneNumber("134823792" + i);
-//			user.setStreet("苍梧路468弄6号60" + i);
+//			user.setStreet("宜山路1398号特力集团" + i);
+//			String name = RandomName.getName();
+//			user.setLastName(name.substring(0, 1));
+//			user.setFirstName(name.substring(1));
 //			startUsers.add(user);
 //		}
+		
+		UserDao userDao = (UserDao)appContext.getBean("userDao");
+		List<AppleUser> appleUsers = userDao.getList();
+		log.info("user size:" + appleUsers.size());
+		for(AppleUser appleUser : appleUsers) {
+			int i =1;
+			User user = new User();
+			user.setAppleId(appleUser.getAppleid());
+			user.setPassword(appleUser.getPassword());
+			user.setEmail(appleUser.getAppleid());
+			user.setPhoneNumber("134823792" + i);
+			user.setStreet("苍梧路468弄6号60" + i);
+			startUsers.add(user);
+			
+			log.info("appleid:" + appleUser.getAppleid()+ " password:" + user.getPassword());
+			i++;
+		}
 		return startUsers;
 	}
 }

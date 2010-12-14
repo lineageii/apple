@@ -24,14 +24,14 @@
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
-	-->
+	
 	<bean id="org.h2.tools.Server" class="org.h2.tools.Server"
 		factory-method="createTcpServer" init-method="start"
 		destroy-method="stop">
 		<constructor-arg
 			value="-tcp,-tcpAllowOthers,true,-tcpPort,8043" />
 	</bean>
-	
+	-->
 	<!-- 定义JdbcTemplate -->
 	<bean id="jdbcTemplate"
 		class="org.springframework.jdbc.core.JdbcTemplate">
