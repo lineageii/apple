@@ -21,7 +21,7 @@ public class DbTest {
 	public void setUp() {
 		appContext = new ClassPathXmlApplicationContext("spring.xml");
 		
-//		 /SimpleJdbcTestUtils.executeSqlScript((SimpleJdbcTemplate) appContext.getBean("simpleJdbcTemplate"), new ClassPathResource("apple.ddl"), false);
+		SimpleJdbcTestUtils.executeSqlScript((SimpleJdbcTemplate) appContext.getBean("simpleJdbcTemplate"), new ClassPathResource("apple.ddl"), false);
 	}
 	public void TestDb(){
 		log.info("insert start");
