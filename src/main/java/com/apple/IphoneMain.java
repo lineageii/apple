@@ -32,7 +32,7 @@ public class IphoneMain {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		
 		Logs.getLogger().info("开始");
 		
@@ -59,6 +59,7 @@ public class IphoneMain {
 			// 监视单个线程
 			final CountDownLatch doneSignal = new CountDownLatch(userSize);
 
+			final String type = args[0];
 			for (final User user : users) {
 				Runnable run = new Runnable() {
 					public void run() {
@@ -66,7 +67,7 @@ public class IphoneMain {
 							// 1 iphone3 8
 							// 2 iphone4 16
 							// 3 iphone4 32
-							user.buy(1);
+							user.buy(Integer.parseInt(type));
 						} catch (Exception e) {
 							Logs.getLogger().error(e,e);
 							Logs.getLogger().error("出错用户信息：" + user.getAppleId());
