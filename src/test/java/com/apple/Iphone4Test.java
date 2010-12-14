@@ -28,7 +28,7 @@ public class Iphone4Test extends SeleneseTestCase {
 		selenium.stop();
 	}
 	
-	@Test
+	
 	public void test3gs_test1() throws Exception {
 		selenium.open("/cn/browse/home/shop_iphone/family/iphone");
 		selenium.click("//button[@type='submit']");
