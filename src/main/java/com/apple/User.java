@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
+import com.apple.constants.Goods;
+import com.apple.entity.AppleOrder;
 import com.meterware.httpunit.ClientProperties;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
@@ -32,11 +34,24 @@ public class User {
 	private String street = "苍梧路468弄6号602室";
 	private String postalCode = "200000";
 	
+	private AppleOrder order = new AppleOrder();
+	
 	public User(){
-		System.setProperty("javax.net.ssl.trustStore","C:\\jdk1.5.0_11\\jre\\lib\\security\\cacerts");
+		System.setProperty("javax.net.ssl.trustStore",Config.TRUST_STORE);
 		wc = new WebConversation();
 	}
 	
+	
+	public AppleOrder getOrder() {
+		return order;
+	}
+
+
+	public void setOrder(AppleOrder order) {
+		this.order = order;
+	}
+
+
 	public String getAppleId() {
 		return appleId;
 	}
@@ -126,6 +141,18 @@ public class User {
 	}
 
 	public void buy(int i) throws Exception{
+		switch(i) {
+		case 1:
+			this.getOrder().setGoodsName(Goods.IPHONE_3GS);
+			break;
+		case 2:
+			this.getOrder().setGoodsName(Goods.IPHONE4_16G_BLACK);
+			break;
+		case 3:
+			this.getOrder().setGoodsName(Goods.IPHONE4_32G_BLACK);
+			break;
+		}
+		
 		Logs.getLogger().info("start");
 		openApple(i);
 		Logs.getLogger().info("addToCart");
@@ -339,7 +366,7 @@ public class User {
 	}
 
 	
-	public void status() throws MalformedURLException, IOException, SAXException, InterruptedException{
+	public void status() throws Exception{
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/status");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
@@ -358,8 +385,19 @@ public class User {
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/thankyou");
 		result = wc.getResponse(checkoutxRq).getText();
 		//System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
+		String orderNo = parseOrderNumber(result);
+		System.out.println("orderNo:" + orderNo);
+		this.getOrder().setOrderNo(orderNo);
 	}
 
+	private String parseOrderNumber(String response) throws Exception {
+		Pattern pattern = Pattern.compile("lpOrderNumber\",\"value\":\".*?\"");
+		Matcher matcher = pattern.matcher(response);
+		if (matcher.find())
+			return matcher.group().replace("lpOrderNumber\",\"value\":\"", "").replace("\"", "");
+		else
+			throw new Exception("Can't find OrderNumber");
+	}
 	
 	private String parseUrlForCart(String response) throws Exception {
 		Pattern pattern = Pattern.compile("/cn/hybrid_cartx.*?=cart");
@@ -367,7 +405,7 @@ public class User {
 		if (matcher.find())
 			return matcher.group();
 		else
-			throw new Exception("Can't find verify");
+			throw new Exception("Can't find UrlForCart");
 	}
 	
 	private String parseUrl(String response, String regex) throws Exception {

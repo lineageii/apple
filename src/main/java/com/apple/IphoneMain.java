@@ -18,9 +18,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.apple.common.RandomName;
 import com.apple.dao.UserDao;
 import com.apple.entity.AppleUser;
+import com.apple.service.AppleService;
 
 public class IphoneMain {
-
 	private static Log log = LogFactory.getLog(IphoneMain.class);
 	// 从配置文件中取出最大线程，初始化线程池
 	private static ExecutorService exec = Executors
@@ -68,6 +68,7 @@ public class IphoneMain {
 							// 2 iphone4 16
 							// 3 iphone4 32
 							user.buy(Integer.parseInt(type));
+							
 						} catch (Exception e) {
 							Logs.getLogger().error(e,e);
 							Logs.getLogger().error("出错用户信息：" + user.getAppleId());
@@ -81,6 +82,10 @@ public class IphoneMain {
 			}
 
 			doneSignal.await(); // wait for all to finish
+			
+			// 保存
+			appContext.getBean(AppleService.class).save(users);
+			
 			// 结束时间
 			long endTime = System.currentTimeMillis();
 			// 用时
@@ -116,35 +121,36 @@ public class IphoneMain {
 
 	private static List<User> getUsers() {
 		List<User> startUsers = new ArrayList<User>();
-//		for(int i = 1 ; i<=9 ; i++){
-//			User user = new User();
-//			user.setAppleId("hujiag"+ i +"@eyou.com");
-//			user.setPassword("pengyan");
-//			user.setEmail("hujiag"+ i +"@eyou.com");
-//			user.setPhoneNumber("134823792" + i);
-//			user.setStreet("宜山路1398号特力集团" + i);
-//			String name = RandomName.getName();
-//			user.setLastName(name.substring(0, 1));
-//			user.setFirstName(name.substring(1));
-//			startUsers.add(user);
-//		}
-		
-		UserDao userDao = (UserDao)appContext.getBean("userDao");
-		List<AppleUser> appleUsers = userDao.getList();
-		log.info("user size:" + appleUsers.size());
-		for(AppleUser appleUser : appleUsers) {
-			int i =1;
+		int[] intArr = {2,4};
+		for(int i: intArr){
 			User user = new User();
-			user.setAppleId(appleUser.getAppleid());
-			user.setPassword(appleUser.getPassword());
-			user.setEmail(appleUser.getAppleid());
+			user.setAppleId("hujiag"+ i +"@eyou.com");
+			user.setPassword("pengyan");
+			user.setEmail("hujiag"+ i +"@eyou.com");
 			user.setPhoneNumber("134823792" + i);
-			user.setStreet("苍梧路468弄6号60" + i);
+			user.setStreet("宜山路1398号特力集团" + i);
+			String name = RandomName.getName();
+			user.setLastName(name.substring(0, 1));
+			user.setFirstName(name.substring(1));
 			startUsers.add(user);
-			
-			log.info("appleid:" + appleUser.getAppleid()+ " password:" + user.getPassword());
-			i++;
 		}
+		
+//		UserDao userDao = (UserDao)appContext.getBean("userDao");
+//		List<AppleUser> appleUsers = userDao.getList();
+//		log.info("user size:" + appleUsers.size());
+//		for(AppleUser appleUser : appleUsers) {
+//			int i =1;
+//			User user = new User();
+//			user.setAppleId(appleUser.getAppleid());
+//			user.setPassword(appleUser.getPassword());
+//			user.setEmail(appleUser.getAppleid());
+//			user.setPhoneNumber("134823792" + i);
+//			user.setStreet("苍梧路468弄6号60" + i);
+//			startUsers.add(user);
+//			
+//			log.info("appleid:" + appleUser.getAppleid()+ " password:" + user.getPassword());
+//			i++;
+//		}
 		return startUsers;
 	}
 }

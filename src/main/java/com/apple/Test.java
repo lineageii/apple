@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.xml.sax.SAXException;
 
+import com.apple.constants.OrderStatus;
 import com.meterware.httpunit.ClientProperties;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
@@ -26,6 +27,6 @@ public class Test {
 				"http://www.yesnap.com/preview/www.youku.com");
 		WebResponse response = wc.getResource(request);
 		System.out.println(response.getHeaderField("Location"));
-
+		System.out.println(OrderStatus.已下单.ordinal());
 	}
 }

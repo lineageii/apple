@@ -13,7 +13,8 @@ public class Config {
 	public static final String END_TIME = config.getString("endTime");
 	/** 随机名称 */
 	public static final List<String> NAME = config.getList("name");
-	
+	/** javax.net.ssl.trustStore */
+	public static final String TRUST_STORE = config.getString("javax.net.ssl.trustStore");
 	private Config() {
 
 	}

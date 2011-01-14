@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
+import com.apple.User;
 import com.apple.entity.AppleUser;
 
 /**
