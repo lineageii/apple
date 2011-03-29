@@ -187,12 +187,12 @@ public class User {
 		HttpUnitOptions.setAcceptCookies(true);
 		wc.setUserAgent("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.12 (KHTML, like Gecko) Chrome/9.0.587.0 Safari/534.12");
 		ClientProperties.getDefaultProperties().setAcceptCookies(true);
-		PostMethodWebRequest mainRq = new PostMethodWebRequest(
-				IphoneUrl.IPHONE_SELECT);
-		WebResponse mainRs = wc.getResponse(mainRq);
-
-		WebForm webForm = mainRs.getForms()[i];
-		webForm.getSubmitButtons()[0].click();
+//		PostMethodWebRequest mainRq = new PostMethodWebRequest(
+//				IphoneUrl.IPHONE_SELECT);
+//		WebResponse mainRs = wc.getResponse(mainRq);
+//
+//		WebForm webForm = mainRs.getForms()[i];
+//		webForm.getSubmitButtons()[0].click();
 		
 	}
 

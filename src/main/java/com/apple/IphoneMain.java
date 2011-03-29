@@ -127,7 +127,7 @@ public class IphoneMain {
 			user.setAppleId("hujiag"+ i +"@eyou.com");
 			user.setPassword("pengyan");
 			user.setEmail("hujiag"+ i +"@eyou.com");
-			user.setPhoneNumber("134823792" + i);
+			user.setPhoneNumber("13482379211" + i);
 			user.setStreet("宜山路1398号特力集团" + i);
 			String name = RandomName.getName();
 			user.setLastName(name.substring(0, 1));
