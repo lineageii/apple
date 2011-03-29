@@ -38,7 +38,7 @@ public class IphoneMain {
 		
 
 		// LOOP START
-		while (true) {
+		for(int i=0; i < 1; i++){
 			// 取得密码正确的注册用户
 			List<User> users = new ArrayList<User>();
 
@@ -68,7 +68,9 @@ public class IphoneMain {
 							// 2 iphone4 16
 							// 3 iphone4 32
 							user.buy(Integer.parseInt(type));
-							
+							if("2".equals(type)){
+								user.buy(3);
+							}
 						} catch (Exception e) {
 							Logs.getLogger().error(e,e);
 							Logs.getLogger().error("出错用户信息：" + user.getAppleId());
@@ -92,11 +94,7 @@ public class IphoneMain {
 			long usedTime = (endTime - startTime);
 			Logs.getLogger().info("用时： " + usedTime + " MS");
 
-			// 结束时间停止进程
-			if (isEndTime()) {
-				exec.shutdown(); // must shutdown
-				return;
-			}
+			exec.shutdown(); // must shutdown
 		}
 		// LOOP END
 

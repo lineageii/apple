@@ -141,22 +141,10 @@ public class User {
 	}
 
 	public void buy(int i) throws Exception{
-		switch(i) {
-		case 1:
-			this.getOrder().setGoodsName(Goods.IPHONE_3GS);
-			break;
-		case 2:
-			this.getOrder().setGoodsName(Goods.IPHONE4_16G_BLACK);
-			break;
-		case 3:
-			this.getOrder().setGoodsName(Goods.IPHONE4_32G_BLACK);
-			break;
-		}
-		
 		Logs.getLogger().info("start");
-		openApple(i);
+		openApple();
 		Logs.getLogger().info("addToCart");
-		addToCart();
+		addToCart(i);
 		Logs.getLogger().info("checkoutx");
 		checkoutx();
 		Logs.getLogger().info("invoice");
@@ -178,7 +166,7 @@ public class User {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public void openApple(int i) throws MalformedURLException, IOException,
+	public void openApple() throws MalformedURLException, IOException,
 			SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
 		HttpUnitOptions.setScriptingEnabled(false);
@@ -196,11 +184,25 @@ public class User {
 		
 	}
 
-	public void addToCart() throws Exception {
-		
+	public void addToCart(int i) throws Exception {
+		String skuid = "MC603CH";
+		switch(i) {
+		case 1:
+			this.getOrder().setGoodsName(Goods.IPHONE_3GS);
+			skuid = "MC637CH";
+			break;
+		case 2:
+			this.getOrder().setGoodsName(Goods.IPHONE4_16G_BLACK);
+			skuid = "MC603CH";
+			break;
+		case 3:
+			this.getOrder().setGoodsName(Goods.IPHONE4_32G_BLACK);
+			skuid = "MC605CH";
+			break;
+		}
 		
 		GetMethodWebRequest request = new GetMethodWebRequest(
-				"http://store.apple.com/cn/configure/MC637CH/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
+				"http://store.apple.com/cn/configure/" + skuid + "/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
 		WebResponse response = wc.getResponse(request);
 		System.out.println(response.getText());
 		
