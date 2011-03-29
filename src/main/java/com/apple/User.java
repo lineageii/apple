@@ -2,6 +2,8 @@ package com.apple;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +17,6 @@ import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.PostMethodWebRequest;
 import com.meterware.httpunit.WebConversation;
-import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
 
 public class User {
@@ -34,23 +35,20 @@ public class User {
 	private String street = "苍梧路468弄6号602室";
 	private String postalCode = "200000";
 	
-	private AppleOrder order = new AppleOrder();
+	private List<AppleOrder> orders = new ArrayList<AppleOrder>();
 	
 	public User(){
 		System.setProperty("javax.net.ssl.trustStore",Config.TRUST_STORE);
 		wc = new WebConversation();
 	}
 	
-	
-	public AppleOrder getOrder() {
-		return order;
+	public List<AppleOrder> getOrders() {
+		return orders;
 	}
 
-
-	public void setOrder(AppleOrder order) {
-		this.order = order;
+	public void setOrders(List<AppleOrder> orders) {
+		this.orders = orders;
 	}
-
 
 	public String getAppleId() {
 		return appleId;
@@ -141,10 +139,11 @@ public class User {
 	}
 
 	public void buy(int i) throws Exception{
+		AppleOrder order = new AppleOrder();
 		Logs.getLogger().info("start");
 		openApple();
 		Logs.getLogger().info("addToCart");
-		addToCart(i);
+		addToCart(i, order);
 		Logs.getLogger().info("checkoutx");
 		checkoutx();
 		Logs.getLogger().info("invoice");
@@ -152,7 +151,7 @@ public class User {
 		Logs.getLogger().info("checkoutxForShip");
 		checkoutxForShip();
 		Logs.getLogger().info("status");
-		status();
+		status(order);
 		Logs.getLogger().info("end");
 	}
 	
@@ -184,19 +183,20 @@ public class User {
 		
 	}
 
-	public void addToCart(int i) throws Exception {
+	public void addToCart(int i, AppleOrder order) throws Exception {
 		String skuid = "MC603CH";
+		this.getOrders().add(order);
 		switch(i) {
 		case 1:
-			this.getOrder().setGoodsName(Goods.IPHONE_3GS);
+			order.setGoodsName(Goods.IPHONE_3GS);
 			skuid = "MC637CH";
 			break;
 		case 2:
-			this.getOrder().setGoodsName(Goods.IPHONE4_16G_BLACK);
+			order.setGoodsName(Goods.IPHONE4_16G_BLACK);
 			skuid = "MC603CH";
 			break;
 		case 3:
-			this.getOrder().setGoodsName(Goods.IPHONE4_32G_BLACK);
+			order.setGoodsName(Goods.IPHONE4_32G_BLACK);
 			skuid = "MC605CH";
 			break;
 		}
@@ -368,7 +368,7 @@ public class User {
 	}
 
 	
-	public void status() throws Exception{
+	public void status(AppleOrder order) throws Exception{
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/status");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
@@ -389,7 +389,7 @@ public class User {
 		//System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
 		String orderNo = parseOrderNumber(result);
 		System.out.println("orderNo:" + orderNo);
-		this.getOrder().setOrderNo(orderNo);
+		order.setOrderNo(orderNo);
 	}
 
 	private String parseOrderNumber(String response) throws Exception {

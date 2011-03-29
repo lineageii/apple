@@ -29,10 +29,10 @@ public class AppleService {
 
 	public void save(List<User> users) {
 		for(User user : users){
-			if(StringUtils.isEmpty(user.getOrder().getOrderNo())) {
+			for(AppleOrder appleOrder : user.getOrders()){
+			if(StringUtils.isEmpty(appleOrder.getOrderNo())) {
 				continue;
 			}
-			AppleOrder appleOrder = user.getOrder();
 			appleOrder.setAppleId(user.getAppleId());
 			appleOrder.setAddress(user.getStreet());
 			appleOrder.setArrivalDate("");
@@ -43,6 +43,7 @@ public class AppleService {
 			appleOrder.setShipDate("");
 			appleOrder.setStatus(String.valueOf(OrderStatus.已下单.ordinal()));
 			orderDao.insertOrder(appleOrder);
+		}
 		}
 	}
 }
