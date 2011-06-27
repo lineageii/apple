@@ -29,19 +29,19 @@ public class User {
 	private String firstName = "佳佳";
 	/** 姓 */
 	private String lastName = "胡";
-	private String state = "上海";
-	private String city = "上海";
+	private String state = "广东";
+	private String city = "广州";
 	private String district = "徐汇区";
 	private String street = "苍梧路468弄6号602室";
 	private String postalCode = "200000";
-	
+
 	private List<AppleOrder> orders = new ArrayList<AppleOrder>();
-	
-	public User(){
-		System.setProperty("javax.net.ssl.trustStore",Config.TRUST_STORE);
+
+	public User() {
+		System.setProperty("javax.net.ssl.trustStore", Config.TRUST_STORE);
 		wc = new WebConversation();
 	}
-	
+
 	public List<AppleOrder> getOrders() {
 		return orders;
 	}
@@ -97,7 +97,7 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	public String getState() {
 		return state;
 	}
@@ -138,7 +138,7 @@ public class User {
 		this.postalCode = postalCode;
 	}
 
-	public void buy(int i) throws Exception{
+	public void buy(int i) throws Exception {
 		AppleOrder order = new AppleOrder();
 		Logs.getLogger().info("start");
 		openApple();
@@ -154,19 +154,18 @@ public class User {
 		status(order);
 		Logs.getLogger().info("end");
 	}
-	
+
 	/**
 	 * 打开iphone订购页面
 	 * 1 iphone3 8
-     * 2 iphone4 16
+	 * 2 iphone4 16
 	 * 3 iphone4 32
 	 * @param i
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public void openApple() throws MalformedURLException, IOException,
-			SAXException {
+	public void openApple() throws MalformedURLException, IOException, SAXException {
 		HttpUnitOptions.setDefaultCharacterSet("utf-8");
 		HttpUnitOptions.setScriptingEnabled(false);
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
@@ -174,19 +173,19 @@ public class User {
 		HttpUnitOptions.setAcceptCookies(true);
 		wc.setUserAgent("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.12 (KHTML, like Gecko) Chrome/9.0.587.0 Safari/534.12");
 		ClientProperties.getDefaultProperties().setAcceptCookies(true);
-//		PostMethodWebRequest mainRq = new PostMethodWebRequest(
-//				IphoneUrl.IPHONE_SELECT);
-//		WebResponse mainRs = wc.getResponse(mainRq);
-//
-//		WebForm webForm = mainRs.getForms()[i];
-//		webForm.getSubmitButtons()[0].click();
-		
+		//		PostMethodWebRequest mainRq = new PostMethodWebRequest(
+		//				IphoneUrl.IPHONE_SELECT);
+		//		WebResponse mainRs = wc.getResponse(mainRq);
+		//
+		//		WebForm webForm = mainRs.getForms()[i];
+		//		webForm.getSubmitButtons()[0].click();
+
 	}
 
 	public void addToCart(int i, AppleOrder order) throws Exception {
 		String skuid = "MC603CH";
 		this.getOrders().add(order);
-		switch(i) {
+		switch (i) {
 		case 1:
 			order.setGoodsName(Goods.IPHONE_3GS);
 			skuid = "MC637CH";
@@ -199,27 +198,37 @@ public class User {
 			order.setGoodsName(Goods.IPHONE4_32G_BLACK);
 			skuid = "MC605CH";
 			break;
+		case 4:
+			order.setGoodsName(Goods.IPHONE4_32G_WHITE);
+			skuid = "MC604CH";
+			break;
+		case 5:
+			order.setGoodsName(Goods.IPHONE4_32G_WHITE);
+			skuid = "MC606CH";
+			break;
 		}
-		
+
 		GetMethodWebRequest request = new GetMethodWebRequest(
-				"http://store.apple.com/cn/configure/" + skuid + "/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
+				"http://store.apple.com/cn/configure/"
+						+ skuid
+						+ "/A?option.iphone_applecare=none&option.iphone_dock=none&option.world_travel_adaptor_kit=none&option.additional_apple_usb_power_adaptor=none&option.additional_apple_dock_connector_to_usb_cable=none&add-to-cart.x=57&add-to-cart.y=5&add-to-cart=添加到购物车");
 		WebResponse response = wc.getResponse(request);
 		System.out.println(response.getText());
-		
+
 		String result = wc.getResponse("http://store.apple.com/cn/cart").getText();
 		//System.out.println(result);
-		String url =  parseUrlForCart(result);
+		String url = parseUrlForCart(result);
 		//System.out.println("url="+url);
-		
-		result = wc.getResponse("http://store.apple.com" +url).getText();
+
+		result = wc.getResponse("http://store.apple.com" + url).getText();
 		//System.out.println(result);
-		
+
 		response = wc.getResponse("http://store.apple.com/cn/checkout/start");
-		
+
 		String sslUrl = response.getHeaderField("Location");
 		System.out.println(sslUrl);
 		wc.getResponse(sslUrl);
-		
+
 		PostMethodWebRequest signinRq = new PostMethodWebRequest("https://store.apple.com/cn/sentryx/sign_in");
 		signinRq.setParameter("login-appleId", this.appleId);
 		signinRq.setParameter("login-password", this.password);
@@ -228,53 +237,52 @@ public class User {
 		String r = params[1].split("=")[1];
 		String s = params[2].split("=")[1];
 		String t = params[3].split("=")[1];
-		
-		System.out.println("c="+c);
-		System.out.println("r="+r);
-		System.out.println("s="+s);
-		System.out.println("t="+t);
-		
+
+		System.out.println("c=" + c);
+		System.out.println("r=" + r);
+		System.out.println("s=" + s);
+		System.out.println("t=" + t);
+
 		signinRq.setParameter("_a", "login.sign");
 		signinRq.setParameter("c", c);
 		signinRq.setParameter("_fid", "si");
 		signinRq.setParameter("r", r);
 		signinRq.setParameter("s", s);
 		signinRq.setParameter("t", t);
-		
+
 		WebResponse signinRs = wc.getResponse(signinRq);
 		result = signinRs.getText();
 		//System.out.println("sigin result=" + result);
-		
-		
+
 		setCookie(signinRs);
-		
+
 		url = parseUrl(result, "https.*?\"}");
-		
+
 		url = StringUtils.remove(url, "\"}");
-		
+
 		//System.out.println("url=" + url);
-		
+
 		wc.getResponse(url);
-		
+
 		PostMethodWebRequest startRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/start");
 		startRq.setParameter("pltn", url.split("=")[1]);
 		startRq.setParameter("v", "on");
 		result = wc.getResponse(startRq).getText();
-		
+
 		//System.out.println("result=" + result);
-		
+
 		PostMethodWebRequest checkoutRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout");
 		System.out.println(url.split("=")[1]);
 		checkoutRq.setParameter("pltn", url.split("=")[1]);
 		checkoutRq.setParameter("v", "on");
 		result = wc.getResponse(checkoutRq).getText();
 		//System.out.println("result=" + result);
-		
-//		
+
+		//		
 
 	}
-	
-	public void checkoutx() throws MalformedURLException, IOException, SAXException{
+
+	public void checkoutx() throws MalformedURLException, IOException, SAXException {
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
 		checkoutxRq.setParameter("shipping-user-lastName", this.lastName);
 		checkoutxRq.setParameter("shipping-user-firstName", this.firstName);
@@ -297,7 +305,7 @@ public class User {
 		String result = checkoutxRs.getText();
 		//System.out.println("result=" + result);
 		setCookie(checkoutxRs);
-		
+
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
 		checkoutxRq.setParameter("bankOption", "Alipay");
 		checkoutxRq.setParameter("zip", "");
@@ -305,13 +313,13 @@ public class User {
 		checkoutxRq.setParameter("promo-code", "");
 		checkoutxRq.setParameter("_a", "bill.cont");
 		checkoutxRq.setParameter("_fid", "co");
-		 checkoutxRs = wc.getResponse(checkoutxRq);
+		checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
 		//System.out.println("result=" + result);
 		setCookie(checkoutxRs);
 	}
-	
-	public void invoice() throws MalformedURLException, IOException, SAXException{
+
+	public void invoice() throws MalformedURLException, IOException, SAXException {
 		PostMethodWebRequest invoiceRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx/invoice");
 		invoiceRq.setParameter("zip", "");
 		invoiceRq.setParameter("method", "A8");
@@ -323,8 +331,8 @@ public class User {
 		//System.out.println("result=" + result);
 		setCookie(invoiceRs);
 	}
-	
-	public void checkoutxForShip() throws MalformedURLException, IOException, SAXException{
+
+	public void checkoutxForShip() throws MalformedURLException, IOException, SAXException {
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
 		checkoutxRq.setParameter("invoice-user-address-lastName", this.lastName);
 		checkoutxRq.setParameter("invoice-user-address-firstName", this.firstName);
@@ -344,18 +352,21 @@ public class User {
 		String result = checkoutxRs.getText();
 		//System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
 		setCookie(checkoutxRs);
-		
+
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
 		checkoutxRq.setParameter("accept", "true");
 		checkoutxRq.setParameter("_a", "terms.cont");
 		checkoutxRq.setParameter("_fid", "co");
-		 checkoutxRs = wc.getResponse(checkoutxRq);
+		checkoutxRs = wc.getResponse(checkoutxRq);
 		result = checkoutxRs.getText();
 		//System.out.println("https://store.apple.com/cn/checkoutx result=" + result);
 		setCookie(checkoutxRs);
-		
+
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx");
-		checkoutxRq.setParameter("deviceID", "TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;zh-CN;GBK;store.apple.com;undefined;undefined;undefined;undefined;false;false;1291663443460;8;Tue%20Jun%2007%202005%2021%3A33%3A44%20GMT+0800%20%28China%20Standard%20Time%29;1280;800;6.00;10.1;;1.6.0_18;11.0;;;-480;-480;Tue%20Dec%2007%202010%2003%3A24%3A03%20GMT+0800%20%28China%20Standard%20Time%29;32;1280;770;0;0;Adobe%20Acrobat%7CAdobe%20Acrobat%20Plug-In%20Version%206.00%20for%20Netscape;;;;Shockwave%20for%20Director%7CAdobe%20Shockwave%20for%20Director%20Netscape%20plug-in%2C%20version%2011.0;Shockwave%20Flash%7CShockwave%20Flash%2010.1%20r103;;;;;;;;;Silverlight%20Plug-In%7C3.0.50106.0;Windows%20Media%20Player%20Plug-in%20Dynamic%20Link%20Library%7CNpdsplay%20dll;;;20;");
+		checkoutxRq
+				.setParameter(
+						"deviceID",
+						"TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%3B%20U%3B%20Windows%20NT%205.1%3B%20en-US%29%20AppleWebKit/534.12%20%28KHTML%2C%20like%20Gecko%29%20Chrome/9.0.587.0%20Safari/534.12;zh-CN;GBK;store.apple.com;undefined;undefined;undefined;undefined;false;false;1291663443460;8;Tue%20Jun%2007%202005%2021%3A33%3A44%20GMT+0800%20%28China%20Standard%20Time%29;1280;800;6.00;10.1;;1.6.0_18;11.0;;;-480;-480;Tue%20Dec%2007%202010%2003%3A24%3A03%20GMT+0800%20%28China%20Standard%20Time%29;32;1280;770;0;0;Adobe%20Acrobat%7CAdobe%20Acrobat%20Plug-In%20Version%206.00%20for%20Netscape;;;;Shockwave%20for%20Director%7CAdobe%20Shockwave%20for%20Director%20Netscape%20plug-in%2C%20version%2011.0;Shockwave%20Flash%7CShockwave%20Flash%2010.1%20r103;;;;;;;;;Silverlight%20Plug-In%7C3.0.50106.0;Windows%20Media%20Player%20Plug-in%20Dynamic%20Link%20Library%7CNpdsplay%20dll;;;20;");
 		checkoutxRq.setParameter("zip", "");
 		checkoutxRq.setParameter("method", "A8");
 		checkoutxRq.setParameter("promo-code", "");
@@ -367,14 +378,13 @@ public class User {
 		setCookie(checkoutxRs);
 	}
 
-	
-	public void status(AppleOrder order) throws Exception{
+	public void status(AppleOrder order) throws Exception {
 		PostMethodWebRequest checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/status");
 		WebResponse checkoutxRs = wc.getResponse(checkoutxRq);
 		String result = checkoutxRs.getText();
 		//System.out.println("https://store.apple.com/cn/checkout/status result=" + result);
 		setCookie(checkoutxRs);
-		
+
 		Thread.sleep(2000);
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkoutx/status");
 		checkoutxRq.setParameter("_a", "st");
@@ -383,7 +393,7 @@ public class User {
 		result = checkoutxRs.getText();
 		//System.out.println("https://store.apple.com/cn/checkoutx/status result=" + result);
 		setCookie(checkoutxRs);
-		
+
 		checkoutxRq = new PostMethodWebRequest("https://store.apple.com/cn/checkout/thankyou");
 		result = wc.getResponse(checkoutxRq).getText();
 		//System.out.println("https://store.apple.com/cn/checkout/thankyou result=" + result);
@@ -400,7 +410,7 @@ public class User {
 		else
 			throw new Exception("Can't find OrderNumber");
 	}
-	
+
 	private String parseUrlForCart(String response) throws Exception {
 		Pattern pattern = Pattern.compile("/cn/hybrid_cartx.*?=cart");
 		Matcher matcher = pattern.matcher(response);
@@ -409,7 +419,7 @@ public class User {
 		else
 			throw new Exception("Can't find UrlForCart");
 	}
-	
+
 	private String parseUrl(String response, String regex) throws Exception {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(response);
@@ -418,10 +428,10 @@ public class User {
 		else
 			throw new Exception("Can't find verify");
 	}
-	
-	private void setCookie(WebResponse rs){
-		String[] cookies =rs.getHeaderFields("set-cookie");
-		for(String cookie : cookies){
+
+	private void setCookie(WebResponse rs) {
+		String[] cookies = rs.getHeaderFields("set-cookie");
+		for (String cookie : cookies) {
 			String firstCookie = cookie.split(";")[0];
 			String[] cookieStr = firstCookie.split("=");
 			wc.putCookie(cookieStr[0], cookieStr[1]);
